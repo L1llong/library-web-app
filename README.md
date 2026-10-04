@@ -19,3 +19,13 @@
 - [Модель данных](./docs/data-model.md)
 - [Контракт API](./docs/api-contract.md)
 - [Матрица соответствия требований](./docs/requirements-matrix.md)
+
+## Запуск фронтенда (ЛР3)
+
+Нужен Node.js LTS.
+
+```
+cd frontend
+npm install
+npm run dev
+```
