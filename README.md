@@ -15,3 +15,7 @@
 ## Связанные документы
 - [Заявка на тему (Project Proposal)](./docs/project-proposal.md)
 - [Требования к системе (Requirements)](./docs/lab-01-requirements.md)
+- [Архитектура](./docs/architecture.md)
+- [Модель данных](./docs/data-model.md)
+- [Контракт API](./docs/api-contract.md)
+- [Матрица соответствия требований](./docs/requirements-matrix.md)
