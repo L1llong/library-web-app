@@ -1,26 +1,29 @@
 <script setup>
-import {ref} from 'vue'
-import {useRouter} from 'vue-router'
-import {items, nextId, addItem} from '../requestStore.js'
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { createRequest } from '../api/requests.js'
+import { force500, setForce500 } from '../api/mockRequests.js'
 
 const router = useRouter()
 
-// Единый объект формы
 const form = ref({
   title: '',
   bookId: 0,
   description: ''
 })
 
-// Объект с текстами ошибок (пустая строка = ошибки нет)
 const errors = ref({
   title: '',
   bookId: '',
   description: ''
 })
 
+const submitError = ref('')
+const isSubmitting = ref(false)
+
 const clearErrors = () => {
-  errors.value = {title: '', bookId: '', description: ''}
+  errors.value = { title: '', bookId: '', description: '' }
+  submitError.value = ''
 }
 
 const validate = () => {
@@ -44,22 +47,41 @@ const validate = () => {
   return !errors.value.title && !errors.value.bookId && !errors.value.description
 }
 
-const onCreate = () => {
+const onCreate = async () => {
+  if (isSubmitting.value) {
+    return
+  }
+
   if (!validate()) {
     return
   }
 
-  const id = nextId
-  addItem({
-    id,
-    number: `REQ-2026-00${id}`,
+  isSubmitting.value = true
+  submitError.value = ''
+
+  const result = await createRequest({
     title: form.value.title.trim(),
     bookId: form.value.bookId,
-    description: form.value.description.trim(),
-    status: 'New'
+    description: form.value.description.trim()
   })
 
-  form.value = {title: '', bookId: 0, description: ''}
+  isSubmitting.value = false
+
+  if (!result.ok) {
+    if (result.status === 400) {
+      submitError.value = 'Проверьте поля формы.'
+      if (result.data?.title) {
+        errors.value.title = result.data.title
+      }
+    } else if (result.status === 500) {
+      submitError.value = 'Сервер не смог обработать запрос. Попробуйте позже.'
+    } else {
+      submitError.value = `Ошибка ${result.status}: ${result.data?.error || 'Неизвестная ошибка'}`
+    }
+    return
+  }
+
+  form.value = { title: '', bookId: 0, description: '' }
   clearErrors()
   router.push('/')
 }
@@ -67,9 +89,12 @@ const onCreate = () => {
 
 <template>
   <main>
-    <h2>
-      Создание заявки на выдачу книги
-    </h2>
+    <h2>Создание заявки на выдачу книги</h2>
+
+    <p v-if="submitError" class="error">
+      {{ submitError }}
+    </p>
+
     <form @submit.prevent="onCreate">
       <label for="title">
         Название книги (5–80 символов)
@@ -120,8 +145,20 @@ const onCreate = () => {
         {{ errors.description }}
       </p>
 
-      <button type="submit">
-        Создать заявку
+      <label class="checkbox-label">
+        <input
+            type="checkbox"
+            :checked="force500"
+            @change="setForce500($event.target.checked)"
+        />
+        Симулировать ошибку сервера (500)
+      </label>
+
+      <button
+          type="submit"
+          :disabled="isSubmitting"
+      >
+        {{ isSubmitting ? 'Создаём…' : 'Создать заявку' }}
       </button>
     </form>
   </main>
@@ -152,5 +189,22 @@ form button {
   margin-top: 10px;
   padding: 10px 20px;
   cursor: pointer;
+}
+
+form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.checkbox-label input {
+  width: auto;
 }
 </style>
