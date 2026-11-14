@@ -35,15 +35,15 @@ vue-router. Библиотека управления состоянием Pinia
 
 Скриншот страницы /new с видимой адресной строкой:
 
-![img_1.png](screenshots/img_1.png)
+![img_1.png](screenshots/lab_4_img_1.png)
 
 Остальные экраны:
 
 Список заявок /: 
-![img_2.png](screenshots/img_2.png)
+![img_2.png](screenshots/lab_4_img_2.png)
 
 Страница входа /login: 
-![img_3.png](screenshots/img_3.png)
+![img_3.png](screenshots/lab_4_img_3.png)
 
 ## 4. Дерево файлов frontend/src
 

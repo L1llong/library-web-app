@@ -7,6 +7,7 @@ export const items = ref(
             number: 'REQ-2026-001',
             title: 'Война и мир',
             bookId: 5,
+            description: 'Классика литературы',
             status: 'New'
         },
         {
@@ -14,7 +15,15 @@ export const items = ref(
             number: 'REQ-2026-002',
             title: 'Преступление и наказание',
             bookId: 12,
+            description: 'Для курсовой работы',
             status: 'InProgress'
         }
     ]
 )
+
+export let nextId = 3
+
+export function addItem(newItem) {
+    items.value.push(newItem)
+    nextId++
+}
