@@ -39,10 +39,10 @@ vue-router. Библиотека управления состоянием Pinia
 
 Остальные экраны:
 
-Список заявок /: 
+Список заявок /:
 ![img_2.png](screenshots/lab_4_img_2.png)
 
-Страница входа /login: 
+Страница входа /login:
 ![img_3.png](screenshots/lab_4_img_3.png)
 
 ## 4. Дерево файлов frontend/src
